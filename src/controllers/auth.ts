@@ -14,22 +14,24 @@ import { AuthRequestBody } from "../types/constants";
 import { IGetUserAuthInfoRequest } from "../types/constants";
 
 // User Profile Controller
-export const UsersAuthController = (
+export const UsersAuthController = async (
   req: IGetUserAuthInfoRequest,
   res: Response
 ) => {
   // Query all users
-  var query = `SELECT * FROM users , todo WHERE  '${req.user.id}' = todo.userid`;
+  var user_query = `SELECT * FROM users WHERE  id = '${req.user.id}'`;
+  var todo_query = `SELECT * FROM todo WHERE  userid = '${req.user.id}' `;
 
-  pool.query(query, (err, result) => {
-    res.status(200).json({
-      status: "success",
-      message: "User Profile loaded successfully",
-      data: {
-        profile: result.rows[0],
-        todo: ["tofo"],
-      },
-    });
+  const user_data = await pool.query(user_query);
+  const todo_data = await pool.query(todo_query);
+
+  res.status(200).json({
+    status: "success",
+    message: "User Profile loaded successfully",
+    data: {
+      profile: user_data.rows[0],
+      todo: todo_data.rows,
+    },
   });
 };
 

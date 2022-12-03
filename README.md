@@ -1,10 +1,13 @@
 ## Node + TypeScript-server boiler-plate
 
-- ts-server boiler plate
+- Ts-server boiler plate
 
 ## Built With
 
 - Node js
+- Node-Mailer
+- Cors
+- Environment Variable
 
 ## Developer Information
 

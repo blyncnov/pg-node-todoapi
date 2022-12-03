@@ -1,4 +1,5 @@
 import { Response, Request } from "express";
+import { IGetUserAuthInfoRequest } from "../types/constants";
 
 // Database Connection
 import pool from "../database";
@@ -49,8 +50,7 @@ export const FetchSingleTodo = (req: Request, res: Response) => {
 };
 
 // CREATE NEW TODO
-export const AddNewTodo = (req: Request, res: Response) => {
-  const fake_user = "1";
+export const AddNewTodo = (req: IGetUserAuthInfoRequest, res: Response) => {
   const { title, description }: CreateTodoRequestBody = req.body;
 
   if (!title || !description) {
@@ -61,7 +61,7 @@ export const AddNewTodo = (req: Request, res: Response) => {
     });
   }
 
-  var query = `INSERT INTO todo(userId, title, description) VALUES(  '${fake_user}',  '${title}', '${description}');`;
+  var query = `INSERT INTO todo(userId, title, description) VALUES(  '${req.user.id}',  '${title}', '${description}');`;
 
   pool.query(query, (err, result) => {
     try {

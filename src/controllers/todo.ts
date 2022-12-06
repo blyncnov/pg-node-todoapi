@@ -9,7 +9,7 @@ import { CreateTodoRequestBody } from "../types/constants";
 
 // FETCH ALL  TODO
 export const FetchAllTodo = (req: Request, res: Response) => {
-  pool.query("SELECT * FROM todo  ", (err, result) => {
+  pool.query("SELECT * FROM todo", (err, result) => {
     try {
       res.status(200).json({
         statusCode: 200,
@@ -30,9 +30,9 @@ export const FetchAllTodo = (req: Request, res: Response) => {
 export const FetchSingleTodo = (req: Request, res: Response) => {
   const { id } = req.params;
 
-  var query = `SELECT * FROM todo WHERE id = '${id}';`;
+  var query = "SELECT * FROM todo WHERE id = $1";
 
-  pool.query(query, (err, result) => {
+  pool.query(query, [id], (err, result) => {
     try {
       res.status(200).json({
         statusCode: 200,
@@ -61,9 +61,9 @@ export const AddNewTodo = (req: IGetUserAuthInfoRequest, res: Response) => {
     });
   }
 
-  var query = `INSERT INTO todo(userId, title, description) VALUES(  '${req.user.id}',  '${title}', '${description}');`;
+  var query = "INSERT INTO todo(userId, title, description) VALUES( $1,  $2, $3)";
 
-  pool.query(query, (err, result) => {
+  pool.query(query, [req.user.id, title, description], (err, result) => {
     try {
       res.status(200).json({
         statusCode: 200,
@@ -85,9 +85,9 @@ export const EditTodo = (req: Request, res: Response) => {
   const { title, description }: CreateTodoRequestBody = req.body;
 
   const { id } = req.params;
-  var query = `UPDATE todo SET title = '${title}', description = '${description}' WHERE id = '${id}';`;
+  var query = "UPDATE todo SET title = $1, description = $2 WHERE id = $3";
 
-  pool.query(query, (err, result) => {
+  pool.query(query, [title, description, id], (err, result) => {
     try {
       res.status(200).json({
         statusCode: 200,
@@ -107,8 +107,8 @@ export const EditTodo = (req: Request, res: Response) => {
 // DELETE  TODO VALUE
 export const DeleteTodo = (req: Request, res: Response) => {
   const { id } = req.params;
-  var query = `DELETE FROM todo WHERE id = '${id}';`;
-  pool.query(query, (err, result) => {
+  var query = "DELETE FROM todo WHERE id = $1;";
+  pool.query(query, [id], (err, result) => {
     try {
       res.status(200).json({
         statusCode: 200,

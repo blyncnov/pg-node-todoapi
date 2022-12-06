@@ -19,11 +19,11 @@ export const UsersAuthController = async (
   res: Response
 ) => {
   // Query all users
-  var user_query = `SELECT * FROM users WHERE  id = '${req.user.id}'`;
-  var todo_query = `SELECT * FROM todo WHERE  userid = '${req.user.id}' `;
+  var user_query = "SELECT * FROM users WHERE  id = $1";
+  var todo_query = "SELECT * FROM todo WHERE  userid = $1 ";
 
-  const user_data = await pool.query(user_query);
-  const todo_data = await pool.query(todo_query);
+  const user_data = await pool.query(user_query, [req.user.id]);
+  const todo_data = await pool.query(todo_query, [req.user.id]);
 
   res.status(200).json({
     status: "success",
@@ -50,9 +50,9 @@ export const SignUpAuthController = async (req: Request, res: Response) => {
   }
 
   // Check if email exist
-  var query = `SELECT email FROM users WHERE email = '${email}'`;
+  var query = "SELECT email FROM users WHERE email = $1";
 
-  pool.query(query, (err, result) => {
+  pool.query(query, [email], (err, result) => {
     if (result.rows.length !== 0) {
       return res.status(404).json({
         statusCode: 201,
@@ -79,7 +79,7 @@ export const SignUpAuthController = async (req: Request, res: Response) => {
         return res.status(400).json({
           statusCode: 400,
           message: err.message,
-          data: null,
+          data: undefined,
         });
       }
     });
@@ -100,9 +100,9 @@ export const LoginAuthController = async (req: Request, res: Response) => {
   }
 
   // Check if email exist
-  var query = `SELECT id,username, email, password FROM users WHERE email = '${email}'`;
+  var query = "SELECT id,username, email, password FROM users WHERE email = $1";
 
-  pool.query(query, async (err, result) => {
+  pool.query(query, [email], async (err, result) => {
     if (result.rows.length === 0) {
       return res.status(200).json({
         status: 404,
@@ -146,12 +146,11 @@ export const LoginAuthController = async (req: Request, res: Response) => {
 // Forgot-Password Controller
 export const ForgotPasswordAuthController = (req: Request, res: Response) => {
   const { email } = req.body;
-  const { id, token } = req.params;
 
   // Query all users
-  var query = `SELECT id,email,password FROM users WHERE email = '${email}'`;
+  var query = "SELECT id,email,password FROM users WHERE email = $1";
 
-  pool.query(query, (err, result) => {
+  pool.query(query, [email], (err, result) => {
     if (result.rows.length === 0) {
       return res.status(401).json({
         status: 401,
@@ -161,8 +160,7 @@ export const ForgotPasswordAuthController = (req: Request, res: Response) => {
     }
 
     try {
-      const secret = `${token}${result.rows[0].password}`;
-
+      const secret = process.env.RESET_SECRET_KEY || "";
       const payload: {
         id: String;
         email: String;
@@ -201,21 +199,25 @@ export const ResetPasswordAuthController = (req: Request, res: Response) => {
   const { password, confirmPassword } = req.body;
 
   // Query all users
-  var query = `SELECT * FROM users WHERE id = '${id}'`;
+  var query = "SELECT * FROM users WHERE id = $1";
 
-  pool.query(query, (err, result) => {
-    const secret = `${token}${result.rows[0].password}`;
-    const confirmtoken = jwt.verify(token, secret);
-
-    if (!password && !confirmPassword) {
-      return;
-    }
-
-    if (!confirmtoken) {
-      return res.send("FAKE TOKEN OLE");
-    }
-
+  pool.query(query, [id], (err, result) => {
     try {
+      const secret = process.env.RESET_SECRET_KEY || "";
+      const confirmtoken = jwt.verify(token, secret);
+
+      if (!password && !confirmPassword) {
+        return;
+      }
+
+      if (!confirmtoken) {
+        return res.status(401).json({
+          status: 401,
+          message: "You are not allowed to reset your password",
+          data: undefined,
+        });
+      }
+
       if (password === confirmPassword) {
         // Change Password to current one
         result.rows[0].password = password;
@@ -231,7 +233,7 @@ export const ResetPasswordAuthController = (req: Request, res: Response) => {
       res.status(401).json({
         status: 401,
         message: error.message,
-        data: null,
+        data: undefined,
       });
     }
   });

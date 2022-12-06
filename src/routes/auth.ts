@@ -24,7 +24,7 @@ router.post("/signup", SignUpAuthController);
 router.post("/login", LoginAuthController);
 
 // Forgot-Password Routes
-router.post("/forgot-password/:id/:token", ForgotPasswordAuthController);
+router.post("/forgot-password", ForgotPasswordAuthController);
 
 // Reset-Password Routes
 router.post("/reset-password/:id/:token", ResetPasswordAuthController);

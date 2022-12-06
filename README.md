@@ -35,6 +35,7 @@ Every routes about users;
   - action: for users to view thier profile
   - response: user's object;
   - requirements : user must be logged in
+
     ```json
     {
             "id": "1",
@@ -58,11 +59,26 @@ Every routes about users;
     }
     ```
 
-- PATCH: /auth/forgot-password
+- POST: /auth/login
+
+  - parameters: email & password
+  - action: for users to login
+  - response: status object;
+
+    ```json
+    {
+      "status": 200,
+      "message": "You've logged in successfully",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6InNoZXJsb2NrcyBIb2xtZXMiLCJpYXQiOjE2NzAzNDY5MTEsImV4cCI6MTY3MDM0NzUxMX0.bPdj6eiuPFuamgls6Vur8XyFj5k4HfH61-TobYcEaoA"
+    }
+    ```
+
+- POST: /auth/forgot-password
 
   - parameters: email
   - action: for users to reset their profile
   - response: user's updated object;
+
     ```json
     {
       "status": 201,
@@ -72,11 +88,12 @@ Every routes about users;
     }
     ```
 
-- PATCH: /auth/<token>
+- PATCH: /auth/<id>/<token>
 
   - parameters: password and confirmPassword
   - action: for users to enter new password
   - response: user's updated object;
+
     ```json
     {
       "id": "1",
@@ -88,9 +105,11 @@ Every routes about users;
     ```
 
 - PATCH: /auth/update
+
   - parameters: properties on the users model
   - action: for users to update their profile
   - response: user's updated object;
+
     ```json
     {
       "_id": "638a2b0756d9124aff9a15ce",

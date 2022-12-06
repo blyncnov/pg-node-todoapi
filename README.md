@@ -1,20 +1,13 @@
-## Node + TypeScript-server boiler-plate
+## Node + TypeScript + PostgreSQL TODOAPI
 
-This todoapi services is to provide the functionalities of every user on bien which includes
+This todoapi services is to provide the functionalities of every user which includes
 
 - Login & Registration
 - Forgot and Reset Password
 - Create and Edit Todo
 - Update & Delete Todo
 
-For now, this server has not been deployed, hence the developer is expected to run the server locally, with the help of the following:
-
-- clone the repository or download the /api folder : git clone https://github.com/blyncnov/pg-node-todoapi.
-  Note: You're only concerned with the src folder, so you should navigate there
-
-- Ensure node is installed else, download [https://nodejs.org/en/download/]here
-- Install all dependencies: npm install
-- run server: npm run start
+For now, this server has not been deployed, hence the developer is expected to run the server locally
 
 ### Base url: http://localhost:8000/api/v1
 

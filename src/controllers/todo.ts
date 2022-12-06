@@ -61,7 +61,8 @@ export const AddNewTodo = (req: IGetUserAuthInfoRequest, res: Response) => {
     });
   }
 
-  var query = "INSERT INTO todo(userId, title, description) VALUES( $1,  $2, $3)";
+  var query =
+    "INSERT INTO todo(userId, title, description) VALUES( $1,  $2, $3) RETURNING *";
 
   pool.query(query, [req.user.id, title, description], (err, result) => {
     try {
@@ -85,7 +86,8 @@ export const EditTodo = (req: Request, res: Response) => {
   const { title, description }: CreateTodoRequestBody = req.body;
 
   const { id } = req.params;
-  var query = "UPDATE todo SET title = $1, description = $2 WHERE id = $3";
+  var query =
+    "UPDATE todo SET title = $1, description = $2 WHERE id = $3 RETURNING *";
 
   pool.query(query, [title, description, id], (err, result) => {
     try {

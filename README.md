@@ -25,9 +25,9 @@ Scheme: "http"
   - users
   - todo
 
-### User
+### User Authentication
 
-Every routes about users;
+Every routes about users authentication;
 
 - GET: /auth/profile
 
@@ -76,8 +76,8 @@ Every routes about users;
 - POST: /auth/forgot-password
 
   - parameters: email
-  - action: for users to reset their profile
-  - response: user's updated object;
+  - action: for users to reset their password
+  - response: detailed object;
 
     ```json
     {
@@ -88,7 +88,7 @@ Every routes about users;
     }
     ```
 
-- PATCH: /auth/<id>/<token>
+- PATCH: /auth/:id/:token
 
   - parameters: password and confirmPassword
   - action: for users to enter new password
@@ -104,60 +104,122 @@ Every routes about users;
     }
     ```
 
-- PATCH: /auth/update
+### Todo Routes
 
-  - parameters: properties on the users model
-  - action: for users to update their profile
-  - response: user's updated object;
+Every routes about todo;
+
+Requirements: : user must be logged in to use any of this routes
+
+- GET: /todo
+
+  - parameters: null
+  - action: To fetch all todo
+  - response: todo object;
 
     ```json
     {
-      "_id": "638a2b0756d9124aff9a15ce",
-      "email": "Og@mail.com",
-      "password": "$2b$08$wejMtv9ytAVmSLOSc5r25OmKKoAT9XW9N.IZJjDNxJxC2Fe1qKYFi",
-      "createdAt": "2022-12-02T16:42:48.008Z",
-      "updatedAt": "2022-12-02T16:54:31.188Z",
-      "__v": 0
+      "statusCode": 200,
+      "message": "Todo successfully retrieved",
+      "data": [
+        {
+          "id": "1",
+          "userid": "1",
+          "title": "I am working on a new project",
+          "description": "What do you think ?",
+          "iscompleted": false
+        },
+        {
+          "id": "2",
+          "userid": "1",
+          "title": "I am working on a new project",
+          "description": "What do you think ?",
+          "iscompleted": false
+        },
+        {
+          "id": "3",
+          "userid": "1",
+          "title": "I am working on a new project",
+          "description": "What do you think ?",
+          "iscompleted": false
+        }
+      ]
     }
     ```
 
-## Transactions
+- GET: /todo
 
-Every routes about transactions
+  - parameters: null
+  - action: To fetch a single todo
+  - response: todo object;
 
-- POST: /transaction/deposit
+    ```json
+    {
+      "statusCode": 200,
+      "message": "Todo data successfully retrieved",
+      "data": {
+        "id": "17",
+        "userid": "1",
+        "title": "I am getting better at PSQL",
+        "description": "yeah!!! i love PSQL 2",
+        "iscompleted": false
+      }
+    }
+    ```
 
-  - parameters: amount (amount deposited)
-  - response: transaction details with model structure
-  - response format: json
-  - action: for users to deposit their account
+- POST: /todo
 
-- POST: /transaction/requestForWithdrawal
+  - parameters: title and description
+  - action: To create a new todo item
+  - response: todo object;
 
-  - parameters: amount
-  - response: transaction details with model structure
-  - response format: json
-  - action: for users to request funds in their account with amount to withdraw
+    ```json
+    {
+      "statusCode": 200,
+      "message": "Todo Created Sucessfully",
+      "data": [
+        {
+          "id": "17",
+          "userid": "1",
+          "title": "I am getting better at PSQL",
+          "description": "yeah!!! i love PSQL 2",
+          "iscompleted": false
+        }
+      ]
+    }
+    ```
 
-- GET: /transaction/user-transactions
+- PATCH: /todo/:id
 
-  - parameters: none
-  - response: an array transaction details with model structure
-  - response format: json
-  - action: for users to check thier transactions
+  - parameters: title and description
+  - action: for users to update single todo data
+  - response: todo's updated object;
 
-- GET: /transaction/:id
+    ```json
+    {
+      "statusCode": 200,
+      "message": "Todo Updated Sucessfully",
+      "data": {
+        "id": "17",
+        "userid": "1",
+        "title": "I am getting better at PSQL",
+        "description": "yeah!!! i love PSQL 2",
+        "iscompleted": false
+      }
+    }
+    ```
 
-  - parameters: id
-  - response: transaction details with model structure
-  - response format: json
-  - action: to get a transaction detail with id
+- DELETE: /todo/:id
 
-- GET: /transaction/all
-  - parameters: none
-    - response: an array transaction details with model structure
-  - response format: json
-  - action: for admin to get lists of all transactions
+  - parameters: null
+  - action: for users to delete specific todo data
+  - response: todo's updated object;
+
+    ```json
+    {
+      "statusCode": 200,
+      "message": "Todo Deleted Sucessfully"
+    }
+    ```
 
 ## Built With
 
